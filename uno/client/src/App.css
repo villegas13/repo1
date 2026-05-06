@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica;
+}
+.header {
+  background: #282c34;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+}
+.header h1 { margin: 0; font-size: 1.2rem; }
+.editor-pane {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.input-area, .preview-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.input-area {
+  border: none;
+  border-right: 1px solid #ddd;
+  resize: none;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 14px;
+  outline: none;
+  background-color: #fcfcfc;
+}
+.preview-area {
+  background-color: white;
+  line-height: 1.6;
+}
+.preview-area h1, .preview-area h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; }
+.preview-area code { background: #eee; padding: 2px 4px; border-radius: 4px; }
