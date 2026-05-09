@@ -57,7 +57,7 @@ export default function ParallaxScrollView({
         ]}>
         {headerImage}
       </Animated.View>
-      <ThemedView style={styles.content}>{children}</ThemedView>
+      <ThemedView style={styles.text}>{children}</ThemedView>
     </Animated.ScrollView>
   );
 }
