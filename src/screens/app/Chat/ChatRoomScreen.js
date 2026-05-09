@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { supabase } from "../../../../lib/supabase";
 
@@ -10,7 +10,7 @@ import { useChatMessages } from "../../../../hooks/chat/useChatMessages";
 const ChatRoomScreen = ({ route, navigation }) => {
   // 1. Obtener chatroom_id de los parámetros de navegación (enviado desde ChatScreen)
   const chatroom_id = route.params?.chatroom_id;
-  const roomName = route.params?.roomName;
+  const roomName = route.params?.roomName || route.params?.name; // Soporte para ambos nombres de prop
   const [currentUserId, setCurrentUserId] = useState(null);
 
   // Establecer el título de la sala en la cabecera
@@ -30,7 +30,9 @@ const ChatRoomScreen = ({ route, navigation }) => {
     };
     getUserId();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) setCurrentUserId(session.user.id);
     });
 
@@ -44,15 +46,19 @@ const ChatRoomScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={messages}
-        inverted
+        inverted // Los mensajes nuevos aparecen abajo (en el índice 0 del array)
         renderItem={({ item }) => (
           <MessageSimple
             message={item}
             isMine={item.sender_id === currentUserId}
+            // Pasamos el username si está disponible por el join de profiles
+            username={item.profiles?.username || "Usuario"}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
+        // Evita que la lista se quede pegada si hay pocos mensajes
+        maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
       />
       <InputChatBox chatroom_id={chatroom_id} currentUserId={currentUserId} />
     </View>

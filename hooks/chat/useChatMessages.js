@@ -7,23 +7,24 @@ export const useChatMessages = (chatroom_id) => {
   useEffect(() => {
     if (!chatroom_id) return;
 
-    // 1. Cargar mensajes iniciales con el nombre del perfil
+    // 1. Carga inicial de mensajes
     const fetchMessages = async () => {
-      // alert("fetching messages: " +  error.message);
-
       const { data, error } = await supabase
         .from("messages")
-        .select("*, profiles(username)")
+        .select("*, profiles!sender_id(username)")
         .eq("chatroom_id", chatroom_id)
         .order("created_at", { ascending: false });
 
-      if (error) console.error("❌ Error al cargar:", error.message);
-      else setMessages(data || []);
+      if (error) {
+        console.error("❌ Error al cargar:", error.message);
+      } else {
+        setMessages(data || []);
+      }
     };
 
     fetchMessages();
 
-    // 2. Suscripción en tiempo real
+    // 2. Suscripción en tiempo real para inserciones inmediatas
     const channel = supabase
       .channel(`room-${chatroom_id}`)
       .on(
